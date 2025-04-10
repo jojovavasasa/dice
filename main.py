@@ -2,21 +2,35 @@ import tkinter as tk
 import random
 
 def roll_dice():
+    pass  # Placeholder for logic (already implemented below)
+    # Get the number of dice and sides from the input fields
     try:
-        # Get the number of dice and sides from the input fields
         num_dice = int(dice_count_entry.get())
         num_sides = int(sides_count_entry.get())
         
         # Validate inputs
         if num_dice <= 0 or num_sides <= 0:
             result_label.config(text="Error: Enter positive numbers")
+            total_label.config(text="Total: ")
             return
         
         # Roll the dice and calculate the result
         dice_result = [random.randint(1, num_sides) for _ in range(num_dice)]
-        result_label.config(text=f"Result: {', '.join(map(str, dice_result))}")
+        total = sum(dice_result)
+        
+        if show_detailed_results.get():
+            result_label.config(text=f"Result: {', '.join(map(str, dice_result))}")
+        else:
+            result_label.config(text="Result: (Detailed results hidden)")
+        total_label.config(text=f"Total: {total}")
     except ValueError:
-        result_label.config(text="Error: Enter valid numbers")
+        if not dice_count_entry.get().isdigit():
+            result_label.config(text="Error: Number of dice must be an integer")
+        elif not sides_count_entry.get().isdigit():
+            result_label.config(text="Error: Number of sides must be an integer")
+        else:
+            result_label.config(text="Error: Enter valid numbers")
+        total_label.config(text="Total: ")
 
 # Create the main window
 root = tk.Tk()
@@ -43,26 +57,6 @@ result_label.pack(pady=20)
 total_label = tk.Label(root, text="Total: ", font=("Arial", 16))
 total_label.pack(pady=10)
 
-# Update the roll_dice function to calculate and display the total
-def roll_dice():
-    try:
-        # Get the number of dice and sides from the input fields
-        num_dice = int(dice_count_entry.get())
-        num_sides = int(sides_count_entry.get())
-        
-        # Validate inputs
-        if num_dice <= 0 or num_sides <= 0:
-            result_label.config(text="Error: Enter positive numbers")
-            total_label.config(text="Total: ")
-            return
-        
-        # Roll the dice and calculate the result
-        dice_result = [random.randint(1, num_sides) for _ in range(num_dice)]
-        total = sum(dice_result)
-        result_label.config(text=f"Result: {', '.join(map(str, dice_result))}")
-        total_label.config(text=f"Total: {total}")
-    except ValueError:
-        result_label.config(text="Error: Enter valid numbers")
-        total_label.config(text="Total: ")
-# Run the application
+# Add a variable to track the toggle state
+show_detailed_results = tk.BooleanVar(value=True)
 root.mainloop()
